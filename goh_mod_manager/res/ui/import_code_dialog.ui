@@ -11,7 +11,7 @@
             </rect>
         </property>
         <property name="windowTitle">
-            <string>Code</string>
+            <string>Load Order Code</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
             <item>
@@ -23,7 +23,7 @@
                         </font>
                     </property>
                     <property name="text">
-                        <string>Import</string>
+                        <string>Import Load Order</string>
                     </property>
                     <property name="alignment">
                         <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -35,7 +35,10 @@
                     <item>
                         <widget class="QLineEdit" name="lineEdit_code">
                             <property name="placeholderText">
-                                <string>Enter code...</string>
+                                <string>Paste code...</string>
+                            </property>
+                            <property name="clearButtonEnabled">
+                                <bool>true</bool>
                             </property>
                         </widget>
                     </item>
