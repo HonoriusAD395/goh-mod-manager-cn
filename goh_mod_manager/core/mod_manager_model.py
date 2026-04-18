@@ -1,3 +1,4 @@
+# AI-generated code, human reviewed
 import os
 import shutil
 from pathlib import Path
@@ -171,6 +172,7 @@ class ModManagerModel(QObject):
         self._load_installed_mods()
         self.installed_mods_signal.emit()
 
+    # AI-generated: Method to replace installed mods list directly
     def replace_installed_mods(self, mods: List[Mod]) -> None:
         self._installed_mods = mods
         self.installed_mods_signal.emit()
@@ -210,6 +212,12 @@ class ModManagerModel(QObject):
         self._installed_mods = self._mods_catalog.scan_installed_mods(
             mods_directory, game_mods_directory
         )
+        
+        # AI-generated: Apply saved aliases to loaded mods
+        saved_aliases = self._config.get_mod_aliases()
+        for mod in self._installed_mods:
+            if mod.id in saved_aliases:
+                mod.alias = saved_aliases[mod.id]
 
     def _load_active_mods(self) -> None:
         """

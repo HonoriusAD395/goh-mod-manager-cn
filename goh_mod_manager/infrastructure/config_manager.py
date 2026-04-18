@@ -1,3 +1,4 @@
+# AI-generated code, human reviewed
 import os
 from pathlib import Path
 
@@ -47,6 +48,10 @@ class ConfigManager(QObject):
     def get_show_guided_tour(self) -> bool:
         return self.settings.value("show_guided_tour", True, type=bool)
 
+    # AI-generated: Methods for mod alias management
+    def get_mod_aliases(self) -> dict:
+        return self.settings.value("mod_aliases", {})
+
     # Setters
     def set_mods_directory(self, path):
         self.settings.setValue("mods_directory", path)
@@ -68,6 +73,21 @@ class ConfigManager(QObject):
 
     def set_show_guided_tour(self, show: bool) -> None:
         self.settings.setValue("show_guided_tour", show)
+
+    # AI-generated: Set and remove mod alias methods
+    def set_mod_alias(self, mod_id: str, alias: str) -> None:
+        aliases = self.get_mod_aliases()
+        if alias:
+            aliases[mod_id] = alias
+        elif mod_id in aliases:
+            del aliases[mod_id]
+        self.settings.setValue("mod_aliases", aliases)
+
+    def remove_mod_alias(self, mod_id: str) -> None:
+        aliases = self.get_mod_aliases()
+        if mod_id in aliases:
+            del aliases[mod_id]
+            self.settings.setValue("mod_aliases", aliases)
 
     # Automatic search
     def first_run(self):

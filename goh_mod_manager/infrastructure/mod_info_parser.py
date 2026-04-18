@@ -1,3 +1,4 @@
+# AI-generated code, human reviewed
 import re
 from pathlib import Path
 from typing import Dict, Optional
@@ -73,11 +74,33 @@ class ModInfoParser:
             return False
 
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
-                self.lines = f.readlines()
-                self._raw_content = "".join(self.lines)
-
-            return True
+            # AI-generated: Support multiple encodings for Chinese mod.info files
+            encodings_to_try = ["utf-8", "utf-8-sig", "gb18030", "gbk", "gb2312", "cp936", "latin-1"]
+            for encoding in encodings_to_try:
+                try:
+                    with open(self.file_path, "r", encoding=encoding) as f:
+                        self.lines = f.readlines()
+                        self._raw_content = "".join(self.lines)
+                    
+                    # Verify the content is valid
+                    if self._raw_content.strip():
+                        # For UTF-8, try to validate it contains valid content
+                        if encoding.startswith("utf-8"):
+                            # UTF-8 should be able to encode/decode without errors
+                            try:
+                                self._raw_content.encode("utf-8").decode("utf-8")
+                                logger.debug(f"Successfully loaded {self.file_path} with encoding: {encoding}")
+                                return True
+                            except (UnicodeEncodeError, UnicodeDecodeError):
+                                continue
+                        else:
+                            logger.debug(f"Successfully loaded {self.file_path} with encoding: {encoding}")
+                            return True
+                except (UnicodeDecodeError, UnicodeError):
+                    continue
+            
+            logger.error(f"Failed to load {self.file_path} with any supported encoding")
+            return False
 
         except Exception as e:
             logger.error(f"Error loading mod info file {self.file_path}: {e}")

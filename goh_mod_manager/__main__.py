@@ -36,14 +36,8 @@ def setup_application(app: QtWidgets.QApplication):
     """Configure Qt application properties."""
     app.setOrganizationName("alexbdka")
     app.setOrganizationDomain("alexbdka.github.io")
-<<<<<<< HEAD
-    app.setApplicationVersion("1.3.1")
-    app.setApplicationDisplayName("GoH Mod Manager")
-=======
     app.setApplicationName("GoH Mod Manager")
     app.setApplicationVersion("1.4.2")
-
->>>>>>> dev
 
 def main():
     """Main entry point."""

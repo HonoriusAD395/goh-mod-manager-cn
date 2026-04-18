@@ -1,3 +1,4 @@
+# AI-generated code, human reviewed
 import re
 from pathlib import Path
 from typing import List, Optional, Tuple
@@ -28,9 +29,10 @@ class OptionsSetParser:
     # Constants for better maintainability
     MODS_SECTION_START = "\t{mods\n"
     MODS_SECTION_END = "\t}\n"
-    MOD_ENTRY_PATTERN = re.compile(r'^\s*"(mod_)?(\d+):0"\s*$')
-    WORKSHOP_MOD_PATTERN = re.compile(r'^\s*"mod_(\d+):0"\s*$')
-    MANUAL_MOD_PATTERN = re.compile(r'^\s*"(\d+):0"\s*$')
+    # AI-generated: Updated patterns to support folder names for manual mods
+    MOD_ENTRY_PATTERN = re.compile(r'^\s*"([^"]+):0"\s*$')  # Match any mod entry
+    WORKSHOP_MOD_PATTERN = re.compile(r'^\s*"mod_(\d+):0"\s*$')  # Workshop: mod_NUMBER:0
+    MANUAL_MOD_PATTERN = re.compile(r'^\s*"([a-zA-Z0-9_-]+):0"\s*$')  # Manual: folder_name:0
     MOD_TEMPLATE_PATTERN = re.compile(r'^\s*"mod_template:0"\s*$')
 
     def __init__(self, file_path: str):
@@ -152,7 +154,8 @@ class OptionsSetParser:
                 mods.append(workshop_match.group(1))
                 continue
 
-            # Check for manual mod format (NUMBER:0)
+            # AI-generated: Check for manual mod format (folder_name:0)
+            # This now supports alphanumeric folder names like "remove60ptree"
             manual_match = self.MANUAL_MOD_PATTERN.match(line)
             if manual_match:
                 mods.append(manual_match.group(1))
@@ -238,10 +241,15 @@ class OptionsSetParser:
 
         # Insert all mods
         for i, mod in enumerate(mods):
-            if mod.manualInstall:
-                mod_entry = f'\t\t"{mod.id}:0"\n'
-            else:
+            # AI-generated: Determine mod entry format based on source directory
+            if "workshop" in mod.folderPath.lower():
+                # Steam Workshop mod: use "mod_<ID>:0" format
                 mod_entry = f'\t\t"mod_{mod.id}:0"\n'
+            else:
+                # Manual/Data directory mod: use folder name from folderPath
+                # Extract folder name from path (e.g., "remove60ptree" from ".../mods/remove60ptree/mod.info")
+                folder_name = Path(mod.folderPath).name
+                mod_entry = f'\t\t"{folder_name}:0"\n'
 
             self.lines.insert(insert_idx + i, mod_entry)
 

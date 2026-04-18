@@ -1,3 +1,4 @@
+# AI-generated code, human reviewed
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -117,6 +118,12 @@ class ModManagerController(QObject):
             self._config.get_presets(),
         )
         self._on_preset_selection_changed(self._view.get_current_preset_name())
+
+    def _refresh_mod_lists(self) -> None:
+        """Refresh mod lists to reflect alias changes."""
+        installed_mods = self._view_model.get_installed_mods()
+        active_mods = self._view_model.get_active_mods()
+        self._view.populate_mod_lists(installed_mods, active_mods)
 
     def _apply_user_preferences(self) -> None:
         """Apply user preferences from configuration."""
@@ -461,6 +468,17 @@ class ModManagerController(QObject):
 
         menu = QMenu(self._view.ui.listWidget_installed_mods)
 
+        # AI-generated: Add "Set Alias" action
+        set_alias_action = menu.addAction(self.tr("Set Alias"))
+        set_alias_action.triggered.connect(lambda: self._set_mod_alias(mod))
+
+        # AI-generated: Add "Clear Alias" action if alias exists
+        if mod.alias:
+            clear_alias_action = menu.addAction(self.tr("Clear Alias"))
+            clear_alias_action.triggered.connect(lambda: self._clear_mod_alias(mod))
+
+        menu.addSeparator()
+
         # Add "Open Folder" action
         open_folder_action = menu.addAction("Open Folder")
         open_folder_action.triggered.connect(
@@ -473,12 +491,51 @@ class ModManagerController(QObject):
 
         # Add "Delete" action for manually installed mods
         if mod.manualInstall:
+            menu.addSeparator()
             delete_action = menu.addAction("Delete")
             delete_action.triggered.connect(
                 lambda: self._delete_mod_with_confirmation(item, mod)
             )
 
         menu.exec(self._view.ui.listWidget_installed_mods.mapToGlobal(pos))
+
+    def _set_mod_alias(self, mod: Mod) -> None:
+        """
+        Set an alias for a mod.
+
+        Args:
+            mod: The mod to set alias for
+        """
+        # AI-generated: Dialog to input mod alias
+        from PySide6.QtWidgets import QInputDialog
+        
+        current_alias = mod.alias if mod.alias else ""
+        alias, ok = QInputDialog.getText(
+            self._view,
+            self.tr("Set Mod Alias"),
+            self.tr("Enter alias for '{name}':").format(name=mod.name),
+            text=current_alias
+        )
+        
+        if ok:
+            alias = alias.strip()
+            mod.alias = alias
+            self._config.set_mod_alias(mod.id, alias)
+            self._refresh_mod_lists()
+            logger.info(f"Set alias for mod {mod.id}: '{alias}'")
+
+    def _clear_mod_alias(self, mod: Mod) -> None:
+        """
+        Clear the alias for a mod.
+
+        Args:
+            mod: The mod to clear alias for
+        """
+        # AI-generated: Clear mod alias and update config
+        mod.alias = ""
+        self._config.remove_mod_alias(mod.id)
+        self._refresh_mod_lists()
+        logger.info(f"Cleared alias for mod {mod.id}")
 
     def _open_mod_folder(self, folder_path: str) -> None:
         """
@@ -834,15 +891,17 @@ class ModManagerController(QObject):
             if not search_text:
                 item.setHidden(False)
             else:
-                # Search in mod name and description
+                # AI-generated: Search in mod name, description, and alias
                 mod_name = mod.name.lower() if mod and mod.name else ""
                 mod_desc = mod.desc.lower() if mod and mod.desc else ""
                 mod_id = mod.id.lower() if mod and mod.id else ""
+                mod_alias = mod.alias.lower() if mod and mod.alias else ""
 
                 is_visible = (
                     search_text in mod_name
                     or search_text in mod_desc
                     or search_text in mod_id
+                    or search_text in mod_alias  # AI-generated: Support alias search
                 )
                 item.setHidden(not is_visible)
 

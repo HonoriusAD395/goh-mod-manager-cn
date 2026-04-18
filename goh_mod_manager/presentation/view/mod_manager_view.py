@@ -1,4 +1,6 @@
+# AI-generated code, human reviewed
 import re
+from pathlib import Path
 from typing import List, Optional
 
 from PySide6.QtCore import Qt
@@ -12,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from goh_mod_manager.core.mod import Mod
+from goh_mod_manager.infrastructure.mod_manager_logger import logger
 from goh_mod_manager.presentation.view.ui.main_window import Ui_MainWindow
 
 
@@ -42,6 +45,10 @@ class ModManagerView(QMainWindow):
         self.ui.label_reorder_tip.setWordWrap(True)
 
     def _configure_drag_and_drop(self) -> None:
+        # AI-generated: Disable editing to prevent scroll jump on double-click
+        self.ui.listWidget_installed_mods.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.ui.listWidget_active_mods.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
         self.ui.listWidget_installed_mods.setAcceptDrops(False)
         self.ui.listWidget_installed_mods.setDragEnabled(False)
         self.ui.listWidget_installed_mods.setDragDropMode(QAbstractItemView.NoDragDrop)
@@ -411,7 +418,24 @@ class ModManagerView(QMainWindow):
         # Handle unicode escape sequences and line breaks
         if re.search(r"(\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}|\\n)", text):
             try:
-                text = bytes(text, "utf-8").decode("unicode_escape")
+                # AI-generated: Check if text contains non-ASCII characters (likely UTF-8 encoded Chinese)
+                has_non_ascii = any(ord(c) > 127 for c in text)
+                
+                if not has_non_ascii:
+                    # Safe to decode unicode escape sequences for ASCII-only text
+                    text = bytes(text, "utf-8").decode("unicode_escape")
+                else:
+                    # AI-generated: For text with non-ASCII characters (Chinese, etc.), handle escapes carefully
+                    # Replace \n with actual newline
+                    text = text.replace("\\n", "\n")
+                    # Handle \uXXXX escapes only, preserve Chinese characters
+                    def replace_unicode_escape(match):
+                        hex_str = match.group(0)[2:]  # Remove \u prefix
+                        try:
+                            return chr(int(hex_str, 16))
+                        except ValueError:
+                            return match.group(0)
+                    text = re.sub(r"\\u[0-9a-fA-F]{4}", replace_unicode_escape, text)
             except (UnicodeDecodeError, UnicodeError):
                 # If decoding fails, keep original text
                 pass
@@ -448,10 +472,28 @@ class ModManagerView(QMainWindow):
             text,
         )
 
-        # Handle unicode escape sequences
-        if re.search(r"(\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}|\\n)", text):
+        # Handle unicode escape sequences safely
+        # Only process if text contains unicode escape patterns
+        if re.search(r"(\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2})", text):
             try:
-                text = bytes(text, "utf-8").decode("unicode_escape")
+                # Check if text contains non-ASCII characters (likely UTF-8 encoded)
+                has_non_ascii = any(ord(c) > 127 for c in text)
+                
+                if not has_non_ascii:
+                    # Safe to decode unicode escape sequences for ASCII-only text
+                    text = bytes(text, "utf-8").decode("unicode_escape")
+                else:
+                    # For text with non-ASCII characters, handle escapes carefully
+                    # Replace \n with actual newline
+                    text = text.replace("\\n", "\n")
+                    # Handle \uXXXX escapes only
+                    def replace_unicode_escape(match):
+                        hex_str = match.group(0)[2:]  # Remove \u prefix
+                        try:
+                            return chr(int(hex_str, 16))
+                        except ValueError:
+                            return match.group(0)
+                    text = re.sub(r"\\u[0-9a-fA-F]{4}", replace_unicode_escape, text)
             except (UnicodeDecodeError, UnicodeError):
                 # If decoding fails, keep original text
                 pass
@@ -519,12 +561,34 @@ class ModManagerView(QMainWindow):
             mod: The mod to add
             bold: Whether to display the mod name in bold
         """
-        # Get clean text without formatting for display
-        clear_name = self.parse_clear_text(mod.name)
+        # AI-generated: Get display name with alias support using str(mod)
+        display_name = str(mod)
+        clear_name = self.parse_clear_text(display_name)
 
-        # Create list item and store mod data
-        item = QListWidgetItem(clear_name)
+        # AI-generated: Add source indicator icon and tooltip
+        # Debug: Check folderPath value
+        logger.debug(f"Mod: {mod.name}, folderPath: {mod.folderPath}")
+        
+        # AI-generated: Check if mod is from Steam Workshop by path keyword
+        is_workshop = mod.folderPath and "workshop" in mod.folderPath.lower()
+        logger.debug(f"Is workshop: {is_workshop}, path: {mod.folderPath}")
+        
+        # AI-generated: Set icon prefix and tooltip based on mod source
+        if is_workshop:
+            # AI-generated: Steam Workshop mod with game controller icon
+            icon_prefix = "🎮 "
+            tooltip = f"Steam Workshop Mod\nID: {mod.id}\n{mod.name}"
+        else:
+            # AI-generated: Local/Data directory mod with package icon
+            icon_prefix = "📦 "
+            # AI-generated: Extract folder name using string split to avoid Path cache issues
+            folder_name = mod.folderPath.split('\\')[-1] if mod.folderPath else "Unknown"
+            tooltip = f"Local Mod\nFolder: {folder_name}\n{mod.name}"
+
+        # AI-generated: Create list item with source indicator icon prefix
+        item = QListWidgetItem(icon_prefix + clear_name)
         item.setData(Qt.UserRole, mod)
+        item.setToolTip(tooltip)  # AI-generated: Set hover tooltip with mod details
 
         # Apply bold formatting if requested
         if bold:
