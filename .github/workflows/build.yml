@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+  # Manual runs: dispatch against a tag ref so the release job targets it.
+  workflow_dispatch:
 
 permissions:
   contents: write
