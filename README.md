@@ -152,7 +152,7 @@ dist/
 
 ## 联系方式
 
-欢迎提交 Pull Request。发起 Issue 前请先确认仓库的 Issues 功能可用。
+欢迎提交 Issue 或 Pull Request。提问前建议先看上面「文档」一节的说明。
 
 **作者**：HonoriusAD395（独轮车）
 **GitHub**：<https://github.com/HonoriusAD395/goh-mod-manager-cn>

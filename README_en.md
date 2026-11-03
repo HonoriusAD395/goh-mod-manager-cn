@@ -153,7 +153,7 @@ The upstream project is also MIT licensed, `Copyright (c) 2026 alexbdka`, and th
 
 ## Contact
 
-Pull requests are welcome. Please check whether the repository's Issues tab is enabled before opening an issue.
+Issues and pull requests are welcome. Please skim the documentation listed above before opening an issue.
 
 **Author**: HonoriusAD395
 **GitHub**: <https://github.com/HonoriusAD395/goh-mod-manager-cn>
