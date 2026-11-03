@@ -6,7 +6,7 @@
 
 ```powershell
 # 进入项目目录
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 
 # 运行应用
 uv run -m goh_mod_manager
@@ -18,7 +18,7 @@ uv run -m goh_mod_manager
 
 ```powershell
 # 进入项目目录
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 
 # 确保已安装依赖
 python -m pip install pyside6 loguru packaging requests py7zr rarfile vdf
@@ -90,7 +90,7 @@ uv --version
 
 ```powershell
 # 进入项目目录
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 
 # 同步依赖（使用 uv）
 uv sync
@@ -160,11 +160,12 @@ PermissionError: [WinError 5] Access is denied
 
 **解决方案：**
 ```powershell
-# 以管理员身份运行 PowerShell
-# 右键点击 PowerShell → "以管理员身份运行"
+# 优先把仓库放到当前用户可写的目录，例如 %USERPROFILE%\Documents\goh-mod-manager-cn
+# 若目录归属其他用户（例如从别处拷贝而来），把所有权改回自己：
+takeown /F "C:\path\to\goh-mod-manager-cn" /R /D Y
 
-# 或者修改文件夹权限
-icacls "B:\Work\python\goh-mod-manager-cn" /grant Users:F /T
+# 不要对整个目录树执行 icacls ... /grant Users:F /T —— 那会让本机所有用户
+# 都能改写程序文件。确有需要时，只对具体出问题的子目录授权。
 ```
 
 ---
@@ -175,7 +176,7 @@ icacls "B:\Work\python\goh-mod-manager-cn" /grant Users:F /T
 
 ```powershell
 # Step 1: 进入项目目录
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 
 # Step 2: 确认 Python 版本
 python --version
@@ -194,7 +195,7 @@ uv run -m goh_mod_manager
 ### 日常运行
 
 ```powershell
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 uv run -m goh_mod_manager
 ```
 
@@ -207,7 +208,7 @@ uv run -m goh_mod_manager
 1. 右键桌面 → 新建 → 快捷方式
 2. 输入目标：
    ```
-   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "cd B:\Work\python\goh-mod-manager-cn; uv run -m goh_mod_manager"
+   C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoExit -Command "cd C:\path\to\goh-mod-manager-cn; uv run -m goh_mod_manager"
    ```
 3. 命名快捷方式为 "GoH Mod Manager"
 4. （可选）更改图标
@@ -220,7 +221,7 @@ uv run -m goh_mod_manager
 
 ```batch
 @echo off
-cd /d B:\Work\python\goh-mod-manager-cn
+cd /d C:\path\to\goh-mod-manager-cn
 uv run -m goh_mod_manager
 pause
 ```
@@ -235,7 +236,7 @@ pause
 
 ```powershell
 # 启动 GoH Mod Manager
-Set-Location "B:\Work\python\goh-mod-manager-cn"
+Set-Location "C:\path\to\goh-mod-manager-cn"
 uv run -m goh_mod_manager
 ```
 
@@ -262,7 +263,7 @@ uv run -m goh_mod_manager
 
 ```powershell
 # 日志位置
-Get-Content "B:\Work\python\goh-mod-manager-cn\logs\mod_manager.log" -Tail 50
+Get-Content "C:\path\to\goh-mod-manager-cn\logs\mod_manager.log" -Tail 50
 ```
 
 ---
@@ -302,7 +303,7 @@ notepad $PROFILE
 
 # 添加以下内容
 function Start-GoH {
-    Set-Location "B:\Work\python\goh-mod-manager-cn"
+    Set-Location "C:\path\to\goh-mod-manager-cn"
     uv run -m goh_mod_manager
 }
 Set-Alias goh Start-GoH
@@ -318,7 +319,7 @@ goh  # 直接启动
 ### 2. 后台运行（无控制台窗口）
 
 ```powershell
-Start-Process powershell -ArgumentList "-NoProfile -WindowStyle Hidden -Command `"cd B:\Work\python\goh-mod-manager-cn; uv run -m goh_mod_manager`""
+Start-Process powershell -ArgumentList "-NoProfile -WindowStyle Hidden -Command `"cd C:\path\to\goh-mod-manager-cn; uv run -m goh_mod_manager`""
 ```
 
 ---

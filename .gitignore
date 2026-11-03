@@ -216,15 +216,18 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Logs
-<<<<<<< HEAD
 logs/
 *.log
+/goh_mod_manager/infrastructure/logs/*
 
 # Help Files
 help*.txt
 
 # IDE
 .idea
-=======
-/goh_mod_manager/infrastructure/logs/*
->>>>>>> dev
+.vscode
+
+# AI IDE / agent tooling
+.lingma/
+folder-alias.json
+private-folder-alias.json

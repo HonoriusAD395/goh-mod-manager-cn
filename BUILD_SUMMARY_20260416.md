@@ -9,7 +9,7 @@
 
 ### 生成的文件
 ```
-位置: B:\Work\python\goh-mod-manager-cn\dist\GoH_Mod_Manager_v1.0.exe
+位置: C:\path\to\goh-mod-manager-cn\dist\GoH_Mod_Manager_v1.0.exe
 大小: 51,480,144 字节 (~49 MB)
 创建时间: 2026-04-16 22:09:40
 ```
@@ -64,7 +64,7 @@ hiddenimports = collect_submodules('goh_mod_manager')
 
 ### 步骤 2: 执行打包
 ```bash
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 python -m PyInstaller --clean build_executable.spec
 ```
 

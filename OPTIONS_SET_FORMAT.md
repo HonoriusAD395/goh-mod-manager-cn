@@ -71,7 +71,7 @@ mod.manualInstall = False
 
 **模组路径：**
 ```
-B:\SteamLibrary\steamapps\common\Call to Arms - Gates of Hell\mods\remove60ptree\mod.info
+D:\SteamLibrary\steamapps\common\Call to Arms - Gates of Hell\mods\remove60ptree\mod.info
 ```
 
 **Mod 对象属性：**
@@ -287,9 +287,9 @@ for mod in mods:
 
 **常见错误：**
 ```
-❌ B:\Mods\我的模组\mod.info     → 中文文件夹名
-❌ B:\Mods\my mod\mod.info       → 含空格
-✅ B:\Mods\my_mod\mod.info       → 正确
+❌ D:\Mods\我的模组\mod.info     → 中文文件夹名
+❌ D:\Mods\my mod\mod.info       → 含空格
+✅ D:\Mods\my_mod\mod.info       → 正确
 ```
 
 ---

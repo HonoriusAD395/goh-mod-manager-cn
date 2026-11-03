@@ -1,23 +1,24 @@
 @echo off
-REM AI-generated: Quick test script for the built executable
+REM AI-generated: quick launcher for the built executable
 echo ========================================
-echo Testing GoH Mod Manager v1.0
+echo Testing GoH Mod Manager
 echo ========================================
 echo.
 
-if exist "dist\GoH_Mod_Manager_v1.0.exe" (
-    echo Starting GoH_Mod_Manager_v1.0.exe...
+if exist "dist\goh_mod_manager.exe" (
+    echo Starting goh_mod_manager.exe...
     echo.
-    start "" "dist\GoH_Mod_Manager_v1.0.exe"
+    start "" "dist\goh_mod_manager.exe"
     echo.
     echo Program started!
     echo Check if the application window appears.
     echo.
 ) else (
     echo ERROR: Executable not found!
-    echo Expected location: dist\GoH_Mod_Manager_v1.0.exe
+    echo Expected location: dist\goh_mod_manager.exe
     echo.
-    echo Please run build.bat first to create the executable.
+    echo Build it first:
+    echo   uv run pyinstaller --onefile --clean --windowed --name goh_mod_manager goh_mod_manager\__main__.py
     echo.
     pause
     exit /b 1

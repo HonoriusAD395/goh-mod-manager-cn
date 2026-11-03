@@ -119,7 +119,7 @@ item.setToolTip(tooltip)  # AI-generated: Set hover tooltip with mod details
 
 1. **清除缓存**
    ```powershell
-   cd B:\Work\python\goh-mod-manager-cn
+   cd C:\path\to\goh-mod-manager-cn
    Get-ChildItem -Path . -Directory -Filter "__pycache__" -Recurse | Remove-Item -Recurse -Force
    Get-ChildItem -Path . -Filter "*.pyc" -Recurse | Remove-Item -Force
    ```

@@ -11,7 +11,7 @@
 
 ### 文件位置
 ```
-B:\Work\python\goh-mod-manager-cn\dist\GoH_Mod_Manager_v1.0.exe
+C:\path\to\goh-mod-manager-cn\dist\GoH_Mod_Manager_v1.0.exe
 ```
 
 ### 技术规格
@@ -140,7 +140,7 @@ B:\Work\python\goh-mod-manager-cn\dist\GoH_Mod_Manager_v1.0.exe
 
 ### 打包命令
 ```bash
-cd B:\Work\python\goh-mod-manager-cn
+cd C:\path\to\goh-mod-manager-cn
 python -m PyInstaller --clean build_executable.spec
 ```
 
