@@ -39,6 +39,19 @@ def setup_application(app: QtWidgets.QApplication):
     app.setApplicationName("GoH Mod Manager")
     app.setApplicationVersion("1.4.2")
 
+
+# AI-generated: resolve the i18n directory, preferring an external copy next to a
+# frozen executable so language packs can be edited without rebuilding.
+def _get_translations_dir() -> Path:
+    if getattr(sys, "frozen", False):
+        exe_dir = Path(sys.executable).parent
+        external = exe_dir / "i18n"
+        if external.exists():
+            return external
+        return Path(sys._MEIPASS) / "goh_mod_manager" / "i18n"
+    return Path(__file__).resolve().parent / "i18n"
+
+
 def main():
     """Main entry point."""
     try:
@@ -47,7 +60,7 @@ def main():
         setup_application(app)
 
         config = ConfigManager()
-        translations_dir = Path(__file__).resolve().parent / "i18n"
+        translations_dir = _get_translations_dir()
         translator = TranslationManager(translations_dir)
         translator.load(config.get_language())
         app.translation_manager = translator

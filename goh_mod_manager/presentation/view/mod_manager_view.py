@@ -39,10 +39,9 @@ class ModManagerView(QMainWindow):
 
     def retranslate(self) -> None:
         self.ui.retranslateUi(self)
-        self.ui.label_reorder_tip.setText(
-            self.tr("Tip: Drag and drop to reorder active mods.")
-        )
-        self.ui.label_reorder_tip.setWordWrap(True)
+        # AI-generated: pull the window title from the translation catalogue and stop
+        # touching label_reorder_tip, which no longer exists in main_window.ui.
+        self.setWindowTitle(self.tr("GoH Mod Manager"))
 
     def _configure_drag_and_drop(self) -> None:
         # AI-generated: Disable editing to prevent scroll jump on double-click

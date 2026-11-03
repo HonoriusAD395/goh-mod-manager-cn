@@ -11,13 +11,22 @@ def normalize_language(language: str, supported: Iterable[str]) -> str:
         return "en"
 
     normalized = language.replace("-", "_").lower()
-    supported_set = set(supported)
+    supported_lower = {s.lower() for s in supported}
 
-    if normalized in supported_set:
+    if normalized in supported_lower:
         return normalized
 
     lang_code = normalized.split("_", maxsplit=1)[0]
-    return lang_code if lang_code in supported_set else "en"
+    if lang_code in supported_lower:
+        return lang_code
+
+    # AI-generated: match a bare language code against "<code>_<region>" entries,
+    # for example "zh" -> "zh_cn".
+    for code in supported_lower:
+        if code.startswith(lang_code + "_"):
+            return code
+
+    return "en"
 
 
 class TranslationManager:
@@ -75,14 +84,24 @@ class TranslationManager:
 
     def load(self, language: str) -> str:
         normalized = normalize_language(language, self.available_languages())
+
+        # Try exact name first, then case-insensitive file search
         translation_path = (
             self._translations_dir / f"{LANGUAGE_FILE_PREFIX}{normalized}.qm"
         )
-
         if not translation_path.exists():
             resolved = self._find_translation_file(normalized)
             if resolved is not None:
                 translation_path = resolved
+
+        # AI-generated: last fallback, scan for any .qm whose locale starts with the
+        # requested language code.
+        if not translation_path.exists():
+            for f in self._translations_dir.glob(f"{LANGUAGE_FILE_PREFIX}*.qm"):
+                stem_code = f.stem[len(LANGUAGE_FILE_PREFIX):].lower()
+                if stem_code.startswith(normalized.split("_")[0]):
+                    translation_path = f
+                    break
 
         if translation_path.exists():
             QCoreApplication.removeTranslator(self._translator)
