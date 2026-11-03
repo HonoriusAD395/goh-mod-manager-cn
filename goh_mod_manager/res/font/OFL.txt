@@ -1,5 +1,5 @@
 Bundled fonts and their licenses
-==============================
+--------------------------------
 
 Two font files are bundled in this directory and embedded into the
 application through goh_mod_manager/res/resources.qrc:
